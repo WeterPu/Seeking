@@ -17,6 +17,7 @@ public void draw(){
     if(mousePressed)
       b.applyForce(b.seek(mouseX, mouseY));
     b.applyForce(b.congregate(seekers));
+    b.applyForce(b.align(seekers));
     b.update();
     b.display();
   }

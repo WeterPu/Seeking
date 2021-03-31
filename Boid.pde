@@ -13,6 +13,7 @@ class Boid extends Ball{
     maxForce = 1;
   }
   
+  /* Creates a seeking force that is towards a object, slows down closer to target*/
   public PVector seek(float x, float y){
     PVector desired = PVector.sub(new PVector(x, y), pos);
     if(desired.mag() > 100)
@@ -24,6 +25,7 @@ class Boid extends Ball{
     return steer;
   }
   
+  /*Seeking in reverse, it aint that complicated*/
   public PVector avoid(float x, float y){
     PVector desired = PVector.sub(new PVector(x, y), pos);
     desired.mult(-1);
@@ -36,6 +38,8 @@ class Boid extends Ball{
     return steer;
   }
   
+  /*Finds the average direction of all the other boids in a area and sets the desired velocity to it
+  Awkwardly heavy cause it gooes through everything rough*/
   public PVector align(Ball[] arr){
     PVector desired = new PVector(0, 0);
     int count = 0;
@@ -56,6 +60,7 @@ class Boid extends Ball{
     return steer;
   }
   
+  /* Finds the aveage position of the boids in an area, and goes towards it just like the seeking.*/
   public PVector congregate(Ball[] arr){
     PVector desired = new PVector(0, 0);
     int count = 0;

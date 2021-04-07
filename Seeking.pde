@@ -1,3 +1,5 @@
+import processing.sound.*;
+
 public Boid[] seekers;
 
 public void setup(){
@@ -5,7 +7,7 @@ public void setup(){
   frameRate(30);
   seekers = new Boid[60];
   for(int i = 0; i < seekers.length; i++)
-    seekers[i] = new Boid((float)(Math.random() * width), (float)(Math.random() * height), (float)(Math.random() * 3 + 2), 5, .3);
+    seekers[i] = new Boid((float)(Math.random() * width), (float)(Math.random() * height), (float)(Math.random() * 4 + 2), 5, .3);
 }
 
 public void draw(){
@@ -17,7 +19,6 @@ public void draw(){
     if(mousePressed)
       b.applyForce(b.seek(mouseX, mouseY));
     b.applyForce(b.congregate(seekers));
-    b.applyForce(b.align(seekers));
     b.update();
     b.display();
   }

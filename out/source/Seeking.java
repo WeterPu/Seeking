@@ -3,6 +3,8 @@ import processing.data.*;
 import processing.event.*; 
 import processing.opengl.*; 
 
+import processing.sound.*; 
+
 import java.util.HashMap; 
 import java.util.ArrayList; 
 import java.io.File; 
@@ -14,6 +16,8 @@ import java.io.IOException;
 
 public class Seeking extends PApplet {
 
+
+
 public Boid[] seekers;
 
 public void setup(){
@@ -21,7 +25,7 @@ public void setup(){
   frameRate(30);
   seekers = new Boid[60];
   for(int i = 0; i < seekers.length; i++)
-    seekers[i] = new Boid((float)(Math.random() * width), (float)(Math.random() * height), (float)(Math.random() * 3 + 2), 5, .3f);
+    seekers[i] = new Boid((float)(Math.random() * width), (float)(Math.random() * height), (float)(Math.random() * 4 + 2), 5, .3f);
 }
 
 public void draw(){
@@ -33,7 +37,6 @@ public void draw(){
     if(mousePressed)
       b.applyForce(b.seek(mouseX, mouseY));
     b.applyForce(b.congregate(seekers));
-    b.applyForce(b.align(seekers));
     b.update();
     b.display();
   }
@@ -140,6 +143,7 @@ class Boid extends Ball{
     maxForce = 1;
   }
   
+  /* Creates a seeking force that is towards a object, slows down closer to target*/
   public PVector seek(float x, float y){
     PVector desired = PVector.sub(new PVector(x, y), pos);
     if(desired.mag() > 100)
@@ -151,6 +155,7 @@ class Boid extends Ball{
     return steer;
   }
   
+  /*Seeking in reverse, it aint that complicated*/
   public PVector avoid(float x, float y){
     PVector desired = PVector.sub(new PVector(x, y), pos);
     desired.mult(-1);
@@ -163,6 +168,8 @@ class Boid extends Ball{
     return steer;
   }
   
+  /*Finds the average direction of all the other boids in a area and sets the desired velocity to it
+  Awkwardly heavy cause it gooes through everything rough*/
   public PVector align(Ball[] arr){
     PVector desired = new PVector(0, 0);
     int count = 0;
@@ -183,6 +190,7 @@ class Boid extends Ball{
     return steer;
   }
   
+  /* Finds the aveage position of the boids in an area, and goes towards it just like the seeking.*/
   public PVector congregate(Ball[] arr){
     PVector desired = new PVector(0, 0);
     int count = 0;
@@ -212,6 +220,22 @@ class Boid extends Ball{
     triangle(0, mass * -2.5f, mass * -2, mass * 2.5f, mass * 2, mass * 2.5f);
     popMatrix();
   }
+}
+public class SoundBoid extends Boid{
+    private SawOsc osc;
+    private LowPass filter;
+    private float freq;
+
+    public SoundBoid(float x, float y, float m, float s, float f, PApplet parent){
+        super(x, y, m, s, f);
+        osc = new SawOsc(parent);
+        filter = new LowPass(parent);
+        freq = 1;
+    }
+
+    public void update(){
+
+    }
 }
   public void settings() {  size(1200, 700); }
   static public void main(String[] passedArgs) {

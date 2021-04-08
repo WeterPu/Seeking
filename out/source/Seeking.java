@@ -23,9 +23,9 @@ public Boid[] seekers;
 public void setup(){
   
   frameRate(30);
-  seekers = new Boid[60];
+  seekers = new Boid[1];
   for(int i = 0; i < seekers.length; i++)
-    seekers[i] = new Boid((float)(Math.random() * width), (float)(Math.random() * height), (float)(Math.random() * 4 + 2), 5, .3f);
+    seekers[i] = new SoundBoid((float)(Math.random() * width), (float)(Math.random() * height), (float)(Math.random() * 4 + 2), 5, .3f, this);
 }
 
 public void draw(){
@@ -224,17 +224,19 @@ class Boid extends Ball{
 public class SoundBoid extends Boid{
     private SawOsc osc;
     private LowPass filter;
-    private float freq;
+    private float myFreq;
 
     public SoundBoid(float x, float y, float m, float s, float f, PApplet parent){
         super(x, y, m, s, f);
         osc = new SawOsc(parent);
-        filter = new LowPass(parent);
-        freq = 1;
+        //filter = new LowPass(parent);
+        myFreq = map(2, 6, 100, 300, mass);
+        osc.play(myFreq, 0);
     }
 
     public void update(){
-
+        super.update();
+        osc.amp(map(0, 5, -.5f, .5f, vel.mag()));
     }
 }
   public void settings() {  size(1200, 700); }
